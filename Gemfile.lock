@@ -1,0 +1,16 @@
+PATH
+  remote: .
+  specs:
+    observatory (0.0.1)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    yard (0.6.8)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  observatory!
+  yard

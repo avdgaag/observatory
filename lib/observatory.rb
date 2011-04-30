@@ -2,7 +2,6 @@ module Observatory
   # Your code goes here...
 end
 
-require 'lib/dispatcher'
-require 'lib/event'
-require 'lib/observable'
-require 'lib/observer'
+%w{dispatcher event observable observer}.each do |f|
+  require File.join(File.dirname(__FILE__), 'observatory', f)
+end
