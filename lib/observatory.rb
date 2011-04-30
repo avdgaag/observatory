@@ -1,0 +1,3 @@
+module Observatory
+  # Your code goes here...
+end

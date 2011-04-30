@@ -1,0 +1,3 @@
+module Observatory
+  VERSION = "0.0.1"
+end
