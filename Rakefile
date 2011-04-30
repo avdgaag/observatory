@@ -12,6 +12,6 @@ Rake::TestTask.new do |t|
 end
 
 YARD::Rake::YardocTask.new do |t| 
-  t.files   = ['lib/**/*.rb', 'app/**/*.rb'] 
+  t.files   = ['lib/**/*.rb', 'app/**/*.rb', '-', 'LICENSE', 'HISTORY'] 
   t.options = %w{--title Observatory}
 end
