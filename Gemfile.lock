@@ -6,11 +6,13 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
+    bluecloth (2.1.0)
     yard (0.6.8)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  bluecloth (~> 2.1)
   observatory!
-  yard
+  yard (~> 0.6)

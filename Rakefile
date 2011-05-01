@@ -13,5 +13,5 @@ end
 
 YARD::Rake::YardocTask.new do |t| 
   t.files   = ['lib/**/*.rb', 'app/**/*.rb', '-', 'LICENSE', 'HISTORY'] 
-  t.options = %w{--title Observatory}
+  t.options = %w{--title Observatory -m markdown}
 end
