@@ -7,6 +7,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     bluecloth (2.1.0)
+    rake (0.8.7)
     yard (0.6.8)
 
 PLATFORMS
@@ -15,4 +16,5 @@ PLATFORMS
 DEPENDENCIES
   bluecloth (~> 2.1)
   observatory!
+  rake (~> 0.8)
   yard (~> 0.6)

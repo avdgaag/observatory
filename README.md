@@ -76,7 +76,6 @@ For full documentation refer to the inline API docs (which you can generate usin
 
 ### To Do
 
-* Set up a proper integration test.
 * Complete unit tests for mixins.
 
 ### Note on Patches/Pull Requests
