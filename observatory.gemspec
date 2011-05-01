@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Arjan van der Gaag']
   s.email       = ['arjan@arjanvandergaag.nl']
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = "A simple implementation of the observer pattern for Ruby programs."
+  s.description = %q{Observatory is a simple gem to facilitate loosely-coupled communication between Ruby objects. It implements the observer design pattern so that your objects can publish events that other objects can subscribe to. Observatory provides some syntactic sugar and methods to notify events, filter values and allow observing objects to stop the filter chain. Observatory is inspired by the Event Dispatcher Symfony component.}
 
   s.rubyforge_project = 'observatory'
 
