@@ -1,0 +1,916 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Observatory::Dispatcher</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (D)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../Observatory.html" title="Observatory (module)">Observatory</a></span></span>
+     &raquo; 
+    <span class="title">Dispatcher</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Observatory::Dispatcher
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Observatory::Dispatcher</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/observatory/dispatcher.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>The Dispatcher is the central repository of all registered observers, and
+is used by observables to send out signals to these observers.</p>
+
+<p>A dispatcher is not a singleton object, which means you may very well have
+several dispatcher objects in your program, keeping track of different
+stacks of observers and observables. Note that this requires you to pass
+your dispatcher object around using dependency injection.</p>
+
+<h2>For observables</h2>
+
+<p>The stack of observers for any given signal is kept in <span class='object_link'><a href="#observers-instance_method" title="Observatory::Dispatcher#observers (method)">#observers</a></span>. When
+using <span class='object_link'><a href="#notify-instance_method" title="Observatory::Dispatcher#notify (method)">#notify</a></span>, <span class='object_link'><a href="#notify_until-instance_method" title="Observatory::Dispatcher#notify_until (method)">#notify_until</a></span> or <span class='object_link'><a href="#filter-instance_method" title="Observatory::Dispatcher#filter (method)">#filter</a></span> all observers in the stack
+will be called.</p>
+
+<h3>Notification methods</h3>
+
+<p>Observable objects may use the following methods to trigger their
+observers:</p>
+
+<ul>
+<li><span class='object_link'><a href="#notify-instance_method" title="Observatory::Dispatcher#notify (method)">#notify</a></span> to call all observers.</li>
+<li><span class='object_link'><a href="#notify_until-instance_method" title="Observatory::Dispatcher#notify_until (method)">#notify_until</a></span> to call observers until one stops the chain.</li>
+<li><span class='object_link'><a href="#filter-instance_method" title="Observatory::Dispatcher#filter (method)">#filter</a></span> to let all observers alter a given value.</li>
+</ul>
+
+
+<h2>For observers</h2>
+
+<p>An object that observes another object is an observer, and it can
+register itself with the <span class='object_link'><a href="" title="Observatory::Dispatcher (class)">Dispatcher</a></span> to listen to a signal that
+observable objects may issue.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'><p>Using <span class='object_link'><a href="#connect-instance_method" title="Observatory::Dispatcher#connect (method)">#connect</a></span> to register a new observer</p></div></h4>
+      <pre class="example code"><span class='class class kw'>class</span> <span class='Logger constant id'>Logger</span>
+  <span class='def def kw'>def</span> <span class='log identifier id'>log</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='rparen token'>)</span>
+    <span class='puts identifier id'>puts</span> <span class='dstring node'>&quot;Post published by #{event.observable}&quot;</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+<span class='logger identifier id'>logger</span> <span class='assign token'>=</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+<span class='dispatcher identifier id'>dispatcher</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'post.publish'</span><span class='comma token'>,</span> <span class='logger identifier id'>logger</span><span class='dot token'>.</span><span class='method identifier id'>method</span><span class='lparen token'>(</span><span class='symbol val'>:log</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+</pre>
+    
+      <h4><div class='inline'><p>Using <span class='object_link'><a href="#disconnect-instance_method" title="Observatory::Dispatcher#disconnect (method)">#disconnect</a></span> to unregister an observer</p></div></h4>
+      <pre class="example code"><span class='dispatcher identifier id'>dispatcher</span><span class='dot token'>.</span><span class='disconnect identifier id'>disconnect</span><span class='lparen token'>(</span><span class='string val'>'post.publish'</span><span class='comma token'>,</span> <span class='logger identifier id'>logger</span><span class='dot token'>.</span><span class='method identifier id'>method</span><span class='lparen token'>(</span><span class='symbol val'>:log</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+</pre>
+    
+      <h4><div class='inline'><p>Using <span class='object_link'><a href="#notify-instance_method" title="Observatory::Dispatcher#notify (method)">#notify</a></span> to let other objects know something has happened</p></div></h4>
+      <pre class="example code"><span class='class class kw'>class</span> <span class='Post constant id'>Post</span>
+  <span class='include identifier id'>include</span> <span class='Observable constant id'>Observable</span>
+  <span class='attr_reader identifier id'>attr_reader</span> <span class='symbol val'>:title</span>
+  <span class='def def kw'>def</span> <span class='publish identifier id'>publish</span>
+    <span class='notify identifier id'>notify</span> <span class='string val'>'post.publish'</span><span class='comma token'>,</span> <span class='symbol val'>:title</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='title identifier id'>title</span>
+    <span class='comment val'># do publication stuff here</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    
+      <h4><div class='inline'><p>Using <span class='object_link'><a href="#notify_until-instance_method" title="Observatory::Dispatcher#notify_until (method)">#notify_until</a></span> to delegate saving a record to another object</p></div></h4>
+      <pre class="example code"><span class='class class kw'>class</span> <span class='Post constant id'>Post</span>
+  <span class='def def kw'>def</span> <span class='save identifier id'>save</span>
+    <span class='notify_until identifier id'>notify_until</span> <span class='string val'>'post.save'</span><span class='comma token'>,</span> <span class='symbol val'>:title</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='title identifier id'>title</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    
+      <h4><div class='inline'><p>Using <span class='object_link'><a href="#filter-instance_method" title="Observatory::Dispatcher#filter (method)">#filter</a></span> to let observers modify the output of the title attribute</p></div></h4>
+      <pre class="example code"><span class='class class kw'>class</span> <span class='Post constant id'>Post</span>
+  <span class='def def kw'>def</span> <span class='title identifier id'>title</span>
+    <span class='filter identifier id'>filter</span><span class='lparen token'>(</span><span class='string val'>'post.title'</span><span class='comma token'>,</span> <span class='@title ivar id'>@title</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='return_value identifier id'>return_value</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    
+  </div>
+
+</div>
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#observers-instance_method" title="#observers (instance method)">- (Hash) <strong>observers</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>A list of all registered observers grouped by signal.</p></div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#connect-instance_method" title="#connect (instance method)">- (#call) <strong>connect</strong>(signal, observer = nil, &amp;block) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Register a observer for a given signal.</p></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#disconnect-instance_method" title="#disconnect (instance method)">- (#call<sup>?</sup>) <strong>disconnect</strong>(signal, observer) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Removes an observer from a signal stack, so it no longer gets triggered.</p></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#filter-instance_method" title="#filter (instance method)">- (Event) <strong>filter</strong>(event, value) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Let all registered observers modify a given value.</p></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Dispatcher) <strong>initialize</strong> </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>A new instance of Dispatcher.</p></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#notify-instance_method" title="#notify (instance method)">- (Event) <strong>notify</strong>(event) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Send out a signal to all registered observers using a new <span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span>
+instance.</p></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#notify_until-instance_method" title="#notify_until (instance method)">- (Event) <strong>notify_until</strong>(event) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Same as <span class='object_link'><a href="#notify-instance_method" title="Observatory::Dispatcher#notify (method)">#notify</a></span>, but halt execution as soon as an observer has
+indicated it has handled the event by returning a non-falsy value.</p></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Observatory::Dispatcher (class)">Dispatcher</a></span></tt>) <strong>initialize</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>A new instance of Dispatcher</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+71
+72
+73</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 71</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span>
+  <span class='@observers ivar id'>@observers</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <span id="observers-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="observers-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>observers</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>A list of all registered observers grouped by signal.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+69
+70
+71</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 69</span>
+
+<span class='def def kw'>def</span> <span class='observers identifier id'>observers</span>
+  <span class='@observers ivar id'>@observers</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="connect-instance_method">
+  
+    - (<tt>#call</tt>) <strong>connect</strong>(signal, observer = nil, &amp;block) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Register a observer for a given signal.</p>
+
+<p>Instead of adding a method or Proc object to the stack, you could
+also use a block. Either the observer argument or the block is required.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'><p>Using a block as an observer</p></div></h4>
+      <pre class="example code"><span class='dispatcher identifier id'>dispatcher</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'post.publish'</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='event identifier id'>event</span><span class='bitor op'>|</span>
+  <span class='puts identifier id'>puts</span> <span class='string val'>&quot;Post was published&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    
+      <h4><div class='inline'><p>Using a method as an observer</p></div></h4>
+      <pre class="example code"><span class='class class kw'>class</span> <span class='Reporter constant id'>Reporter</span>
+  <span class='def def kw'>def</span> <span class='log identifier id'>log</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='rparen token'>)</span>
+    <span class='puts identifier id'>puts</span> <span class='string val'>&quot;Post published&quot;</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+<span class='dispatcher identifier id'>dispatcher</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'post.publish'</span><span class='comma token'>,</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='dot token'>.</span><span class='method identifier id'>method</span><span class='lparen token'>(</span><span class='symbol val'>:log</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+</pre>
+    
+  </div>
+<h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>signal</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>is the name used by the observable to trigger
+observers</p></div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>#call</tt>)</span>
+      
+      
+        <span class='name'>observer</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>is the Proc or method that will react to
+an event issued by an observable.</p></div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>#call</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the added observer</p></div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 98</span>
+
+<span class='def def kw'>def</span> <span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='signal identifier id'>signal</span><span class='comma token'>,</span> <span class='observer identifier id'>observer</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='observer identifier id'>observer</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='if if kw'>if</span> <span class='block_given? fid id'>block_given?</span>
+      <span class='observer identifier id'>observer</span> <span class='assign token'>=</span> <span class='block identifier id'>block</span>
+    <span class='else else kw'>else</span>
+      <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'Use a block, method or proc to specify an observer'</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='observers identifier id'>observers</span><span class='lbrack token'>[</span><span class='signal identifier id'>signal</span><span class='rbrack token'>]</span> <span class='opasgn op'>||=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='observers identifier id'>observers</span><span class='lbrack token'>[</span><span class='signal identifier id'>signal</span><span class='rbrack token'>]</span> <span class='lshft op'>&lt;&lt;</span> <span class='observer identifier id'>observer</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="disconnect-instance_method">
+  
+    - (<tt>#call</tt><sup>?</sup>) <strong>disconnect</strong>(signal, observer) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Removes an observer from a signal stack, so it no longer gets triggered.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>signal</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>is the name of the stack to remove the observer
+from.</p></div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>#call</tt>)</span>
+      
+      
+        <span class='name'>observer</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>is the original observer to remove.</p></div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>#call</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>the removed observer or nil if it could not be found</p></div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+116
+117
+118
+119</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 116</span>
+
+<span class='def def kw'>def</span> <span class='disconnect identifier id'>disconnect</span><span class='lparen token'>(</span><span class='signal identifier id'>signal</span><span class='comma token'>,</span> <span class='observer identifier id'>observer</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='observers identifier id'>observers</span><span class='dot token'>.</span><span class='key? fid id'>key?</span><span class='lparen token'>(</span><span class='signal identifier id'>signal</span><span class='rparen token'>)</span>
+  <span class='observers identifier id'>observers</span><span class='lbrack token'>[</span><span class='signal identifier id'>signal</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='observer identifier id'>observer</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="filter-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>) <strong>filter</strong>(event, value) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Let all registered observers modify a given value. The observable can
+then use the <span class='object_link'><a href="Event.html#return_value-instance_method" title="Observatory::Event#return_value (method)">Event#return_value</a></span> to get the filtered result back.</p>
+
+<p>You could use <span class='object_link'><a href="#filter-instance_method" title="Observatory::Dispatcher#filter (method)">#filter</a></span> to let observers modify arguments to a method
+before continuing to work on them (just an example).</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
+      
+      
+        <span class='name'></span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+        <span class='name'>value</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+161
+162
+163
+164
+165
+166
+167</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 161</span>
+
+<span class='def def kw'>def</span> <span class='filter identifier id'>filter</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='each identifier id'>each</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='dot token'>.</span><span class='signal identifier id'>signal</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='observer identifier id'>observer</span><span class='bitor op'>|</span>
+    <span class='value identifier id'>value</span> <span class='assign token'>=</span> <span class='observer identifier id'>observer</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='return_value identifier id'>return_value</span> <span class='assign token'>=</span> <span class='value identifier id'>value</span>
+  <span class='event identifier id'>event</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="notify-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>) <strong>notify</strong>(event) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Send out a signal to all registered observers using a new <span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span>
+instance. The <span class='object_link'><a href="Event.html#signal-instance_method" title="Observatory::Event#signal (method)">Event#signal</a></span> will be used to determine the stack of
+<span class='object_link'><a href="#observers-instance_method" title="Observatory::Dispatcher#observers (method)">#observers</a></span> to use.</p>
+
+<p>Using <span class='object_link'><a href="#notify-instance_method" title="Observatory::Dispatcher#notify (method)">#notify</a></span> allows observers to take action at a given time during
+program execution, such as logging important events.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
+      
+      
+        <span class='name'></span>
+      
+      
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+130
+131
+132
+133
+134
+135</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 130</span>
+
+<span class='def def kw'>def</span> <span class='notify identifier id'>notify</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='rparen token'>)</span>
+  <span class='each identifier id'>each</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='dot token'>.</span><span class='signal identifier id'>signal</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='observer identifier id'>observer</span><span class='bitor op'>|</span>
+    <span class='observer identifier id'>observer</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='event identifier id'>event</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="notify_until-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>) <strong>notify_until</strong>(event) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Same as <span class='object_link'><a href="#notify-instance_method" title="Observatory::Dispatcher#notify (method)">#notify</a></span>, but halt execution as soon as an observer has
+indicated it has handled the event by returning a non-falsy value.</p>
+
+<p>An event that was acted upon by an observer will be marked as processed.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
+      
+      
+        <span class='name'></span>
+      
+      
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+  <h3>See Also:</h3>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Event.html#process%21-instance_method" title="Observatory::Event#process! (method)">Event#process!</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+145
+146
+147
+148
+149
+150</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 145</span>
+
+<span class='def def kw'>def</span> <span class='notify_until identifier id'>notify_until</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='rparen token'>)</span>
+  <span class='each identifier id'>each</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='dot token'>.</span><span class='signal identifier id'>signal</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='observer identifier id'>observer</span><span class='bitor op'>|</span>
+    <span class='event identifier id'>event</span><span class='dot token'>.</span><span class='process! fid id'>process!</span> <span class='and and kw'>and</span> <span class='break break kw'>break</span> <span class='if if_mod kw'>if</span> <span class='observer identifier id'>observer</span><span class='dot token'>.</span><span class='call identifier id'>call</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='event identifier id'>event</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Sun May  1 21:33:36 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.8 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

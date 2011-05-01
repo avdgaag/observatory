@@ -1,0 +1,673 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Observatory::Event</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (E)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../Observatory.html" title="Observatory (module)">Observatory</a></span></span>
+     &raquo; 
+    <span class="title">Event</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Observatory::Event
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Hash</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Hash</li>
+          
+            <li class="next">Observatory::Event</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/observatory/event.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+  <div class="note notetag">
+    <strong>Note:</strong> 
+    <div class='inline'><p>An event is essentially a Hash with some extra properties, so
+you can use all the regular Hash and Enumerable methods to your liking.</p></div>
+  </div>
+
+<p>An Event is a value object that the observable passes along to the
+observers. It gives observers easy access to the original observable
+and any additional values it may have wanted to pass along
+(the parameters).</p>
+
+<p>The event object is also returned back to the observable that originally
+issued it, so it also works as a value object to pass information from
+the observers to the observable. The event knows whether it has been acted
+upon, and it can remember a return value that the observable may want to
+use (and other observers may want to act upon).</p>
+
+<p>The event works just like a regular Ruby Hash, so you can access any
+parameters just like you would with a hash.</p>
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'><p>Accessing parameters like a Hash</p></div></h4>
+      <pre class="example code"><span class='event identifier id'>event</span> <span class='assign token'>=</span> <span class='Event constant id'>Event</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span> <span class='string val'>'post.publish'</span><span class='comma token'>,</span> <span class='symbol val'>:title</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'My new post'</span><span class='rparen token'>)</span>
+<span class='event identifier id'>event</span><span class='lbrack token'>[</span><span class='symbol val'>:title</span><span class='rbrack token'>]</span> <span class='comment val'># =&gt; 'My new post'</span>
+</pre>
+    
+  </div>
+
+</div>
+
+  
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#observable-instance_method" title="#observable (instance method)">- (Object) <strong>observable</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>The original observable object that issued the event.</p></div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#return_value-instance_method" title="#return_value (instance method)">- (Object) <strong>return_value</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>The return value for the observable, that observers may modify.</p></div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#signal-instance_method" title="#signal (instance method)">- (String) <strong>signal</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>The name of the signal that the observable triggered.</p></div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Event) <strong>initialize</strong>(observable, signal, parameters = {}) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Create a new event instance with the given observable and signal.</p></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#process%21-instance_method" title="#process! (instance method)">- (Boolean) <strong>process!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Mark this event as processed, so the observable knows an observer was
+active when using <span class='object_link'><a href="Dispatcher.html#notify_until-instance_method" title="Observatory::Dispatcher#notify_until (method)">Dispatcher#notify_until</a></span>.</p></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#processed%3F-instance_method" title="#processed? (instance method)">- (Boolean) <strong>processed?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>See if this event has been processed by an observer.</p></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Observatory::Event (class)">Event</a></span></tt>) <strong>initialize</strong>(observable, signal, parameters = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Create a new event instance with the given observable and signal. Any
+parameters are stored, which you can later access like a hash.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+        <span class='name'>observable</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>, <tt>#to_s</tt>)</span>
+      
+      
+        <span class='name'>signal</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <span class='name'>parameters</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>is a hash of additional information that
+observers may want to use.</p></div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+44
+45
+46
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/event.rb', line 44</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='observable identifier id'>observable</span><span class='comma token'>,</span> <span class='signal identifier id'>signal</span><span class='comma token'>,</span> <span class='parameters identifier id'>parameters</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='@observable ivar id'>@observable</span><span class='comma token'>,</span> <span class='@signal ivar id'>@signal</span> <span class='assign token'>=</span> <span class='observable identifier id'>observable</span><span class='comma token'>,</span> <span class='signal identifier id'>signal</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+  <span class='merge! fid id'>merge!</span> <span class='parameters identifier id'>parameters</span>
+  <span class='@processed ivar id'>@processed</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='super super kw'>super</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <span id="observable-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="observable-instance_method">
+  
+    - (<tt>Object</tt>) <strong>observable</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>The original observable object that issued the event.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+26
+27
+28</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/event.rb', line 26</span>
+
+<span class='def def kw'>def</span> <span class='observable identifier id'>observable</span>
+  <span class='@observable ivar id'>@observable</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id="return_value=-instance_method"></span>
+      <span id="return_value-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="return_value-instance_method">
+  
+    - (<tt>Object</tt>) <strong>return_value</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>The return value for the observable, that observers may modify.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Object</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+35
+36
+37</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/event.rb', line 35</span>
+
+<span class='def def kw'>def</span> <span class='return_value identifier id'>return_value</span>
+  <span class='@return_value ivar id'>@return_value</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <span id="signal-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="signal-instance_method">
+  
+    - (<tt>String</tt>) <strong>signal</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>The name of the signal that the observable triggered. Namespaced with
+periods.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+31
+32
+33</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/event.rb', line 31</span>
+
+<span class='def def kw'>def</span> <span class='signal identifier id'>signal</span>
+  <span class='@signal ivar id'>@signal</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="process!-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>process!</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>Mark this event as processed, so the observable knows an observer was
+active when using <span class='object_link'><a href="Dispatcher.html#notify_until-instance_method" title="Observatory::Dispatcher#notify_until (method)">Dispatcher#notify_until</a></span>.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>true</p></div>
+      
+    </li>
+  
+</ul>
+
+  <h3>See Also:</h3>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Dispatcher.html#notify_until-instance_method" title="Observatory::Dispatcher#notify_until (method)">Dispatcher#notify_until</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+66
+67
+68</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/event.rb', line 66</span>
+
+<span class='def def kw'>def</span> <span class='process! fid id'>process!</span>
+  <span class='@processed ivar id'>@processed</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="processed?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>processed?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>See if this event has been processed by an observer. Useful when using
+<span class='object_link'><a href="Dispatcher.html#notify_until-instance_method" title="Observatory::Dispatcher#notify_until (method)">Dispatcher#notify_until</a></span> to see if there was any observer that actually
+did something.</p>
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+  <h3>See Also:</h3>
+  <ul class="see">
+    
+      <li><span class='object_link'><a href="Dispatcher.html#notify_until-instance_method" title="Observatory::Dispatcher#notify_until (method)">Dispatcher#notify_until</a></span></li>
+    
+  </ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+57
+58
+59</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/observatory/event.rb', line 57</span>
+
+<span class='def def kw'>def</span> <span class='processed? fid id'>processed?</span>
+  <span class='@processed ivar id'>@processed</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Sun May  1 21:33:36 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.8 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>
