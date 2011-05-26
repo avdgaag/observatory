@@ -28,6 +28,11 @@ module Observatory
   # register itself with the {Dispatcher} to listen to a signal that
   # observable objects may issue.
   #
+  # An observer may be anything that is callable, but will usually
+  # be a method, block or Proc object. You may optionally specify an
+  # explicit priority for an observer, to make sure it gets called before
+  # or after other observers.
+  #
   # @example Using {#connect} to register a new observer
   #   class Logger
   #     def log(event)
@@ -77,6 +82,12 @@ module Observatory
     # Instead of adding a method or Proc object to the stack, you could
     # also use a block. Either the observer argument or the block is required.
     #
+    # Optionally, you could pass in an options hash as the last argument, that
+    # can specify an explicit priority. When omitted, an internal counter starting
+    # from 1 will be used. To make sure your observer is called last, specify
+    # a high, **positive** number. To make sure your observer is called first, specify
+    # a high, **negative** number.
+    #
     # @example Using a block as an observer
     #   dispatcher.connect('post.publish') do |event|
     #     puts "Post was published"
@@ -90,12 +101,40 @@ module Observatory
     #   end
     #   dispatcher.connect('post.publish', Reporter.new.method(:log))
     #
-    # @param [String] signal is the name used by the observable to trigger
-    #   observers
-    # @param [#call] observer is the Proc or method that will react to
-    #   an event issued by an observable.
+    # @example Determining observer call order using priority
+    #   dispatcher.connect('pulp', :priority => 10) do
+    #     puts "I dare you!"
+    #   end
+    #   dispatcher.connect('pulp', :priority => -10) do
+    #     puts "I double-dare you!"
+    #   end
+    #   # output when "pulp" is triggered:
+    #   "I double-dare you!"
+    #   "I dare you!"
+    #
+    # @overload connect(signal, observer, options = {})
+    #   @param [String] signal is the name used by the observable to trigger
+    #     observers
+    #   @param [#call] observer is the Proc or method that will react to
+    #     an event issued by an observable.
+    #   @param [Hash] options is an optional Hash of additional options.
+    #   @option options [Fixnum] :priority is the priority of this observer
+    #     in the stack of all observers for this signal. A higher number means
+    #     lower priority. Negative numbers are allowed.
+    # @overload connect(signal, options = {}, &block)
+    #   @param [String] signal is the name used by the observable to trigger
+    #     observers
+    #   @param [Hash] options is an optional Hash of additional options.
+    #   @option options [Fixnum] :priority is the priority of this observer
+    #     in the stack of all observers for this signal. A higher number means
+    #     lower priority. Negative numbers are allowed.
     # @return [#call] the added observer
     def connect(signal, *args, &block)
+      # ugly argument parsing.
+      # Make sure that there is either a block given, or that the second argument is
+      # something callable. If there is a block given, the second argument, if given,
+      # must be a Hash which defaults to an empty Hash. If there is no block given,
+      # the third optional argument must be Hash.
       if block_given?
         observer = block
         if args.size == 1 && args.first.is_a?(Hash)
@@ -121,11 +160,15 @@ module Observatory
         :priority => (options[:priority] || next_internal_priority)
       }
 
+      # Initialize the list of observers for this signal and add this observer
       observers[signal] ||= []
       observers[signal] << observer_with_priority
+
+      # Sort all observers on priority
       observers[signal].sort! do |a,b|
         a[:priority] <=> b[:priority]
       end
+
       observer
     end
 
