@@ -38,6 +38,7 @@ class DispatcherTest < Test::Unit::TestCase
     @dispatcher.connect('signal', :priority => 5) do
       guinea_pig << 'bar'
     end
+    @dispatcher.notify(Event.new('observable', 'signal'))
     assert_equal 'FOOBAR', guinea_pig
   end
 
@@ -52,7 +53,8 @@ class DispatcherTest < Test::Unit::TestCase
     @dispatcher.connect('signal', :priority => -1) do
       guinea_pig << 'qux'
     end
-    assert_equal 'fooquzbarbaz', guinea_pig
+    @dispatcher.notify(Event.new('observable', 'signal'))
+    assert_equal 'fooquxbarbaz', guinea_pig
   end
 
   def test_connecting_nothing_should_raise_exception

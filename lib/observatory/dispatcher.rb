@@ -95,12 +95,24 @@ module Observatory
     # @param [#call] observer is the Proc or method that will react to
     #   an event issued by an observable.
     # @return [#call] the added observer
-    def connect(signal, observer = nil, &block)
-      if observer.nil?
-        if block_given?
-          observer = block
+    def connect(signal, *args, &block)
+      if block_given?
+        observer = block
+        if args.size == 1 && args.first.is_a?(Hash)
+          options = args.first
+        elsif args.size == 0
+          options = {}
         else
-          raise ArgumentError, 'Use a block, method or proc to specify an observer'
+          raise ArgumentError, 'When given a block, #connect only expects a signal and options hash as arguments'
+        end
+      else
+        observer = args.shift
+        raise ArgumentError, 'Use a block, method or proc to specify an observer' unless observer.respond_to?(:call)
+        if args.any?
+          options = args.shift
+          raise ArgumentError, '#connect only expects a signal, method and options hash as arguments' unless options.is_a?(Hash) || args.any?
+        else
+          options = {}
         end
       end
       observers[signal] ||= []
