@@ -155,19 +155,9 @@ module Observatory
         end
       end
 
-      observer_with_priority = {
-        :observer => observer,
-        :priority => (options[:priority] || next_internal_priority)
-      }
-
       # Initialize the list of observers for this signal and add this observer
-      observers[signal] ||= []
-      observers[signal] << observer_with_priority
-
-      # Sort all observers on priority
-      observers[signal].sort! do |a,b|
-        a[:priority] <=> b[:priority]
-      end
+      observers[signal] ||= Stack.new
+      observers[signal].push(observer, options[:priority])
 
       observer
     end
@@ -180,9 +170,7 @@ module Observatory
     # @return [#call, nil] the removed observer or nil if it could not be found
     def disconnect(signal, observer)
       return nil unless observers.key?(signal)
-      observers[signal].delete_if do |observer_with_priority|
-        observer_with_priority[:observer] == observer
-      end
+      observers[signal].delete(observer)
     end
 
     # Send out a signal to all registered observers using a new {Event}
@@ -235,14 +223,9 @@ module Observatory
 
   private
 
-    def next_internal_priority
-      @next_internal_priority ||= 0
-      @next_internal_priority += 1
-    end
-
     def each(signal, &block)
-      (observers[signal] || []).each do |observer_with_priority|
-        yield observer_with_priority[:observer]
+      (observers[signal] || []).each do |observer|
+        yield observer
       end
     end
   end
