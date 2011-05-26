@@ -3,16 +3,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Observatory::Dispatcher</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+<title>
+  Class: Observatory::Dispatcher
+  
+    &mdash; Observatory
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -195,6 +208,8 @@ observable objects may issue.</p>
   </ul>
 
 
+
+
   
     <h2>
       Instance Method Summary
@@ -206,7 +221,7 @@ observable objects may issue.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#connect-instance_method" title="#connect (instance method)">- (#call) <strong>connect</strong>(signal, observer = nil, &amp;block) </a>
+      <a href="#connect-instance_method" title="#connect (instance method)">- (#call) <strong>connect</strong>(signal, *args, &amp;block) </a>
     
 
     
@@ -403,8 +418,8 @@ indicated it has handled the event by returning a non-falsy value.</p></div></sp
   
     <li>
       
-        <span class='type'>(<tt>Hash</tt>)</span>
       
+        <span class='type'>(<tt>Hash</tt>)</span>
       
       
       
@@ -444,7 +459,11 @@ indicated it has handled the event by returning a non-falsy value.</p></div></sp
       <div class="method_details first">
   <p class="signature first" id="connect-instance_method">
   
-    - (<tt>#call</tt>) <strong>connect</strong>(signal, observer = nil, &amp;block) 
+    
+      <span class="overload">- (<tt>Object</tt>) <strong>connect</strong>(signal, observer, options = {}) </span>
+    
+      <span class="overload">- (<tt>Object</tt>) <strong>connect</strong>(signal, options = {}, &amp;block) </span>
+    
   
 
   
@@ -454,6 +473,12 @@ indicated it has handled the event by returning a non-falsy value.</p></div></sp
 
 <p>Instead of adding a method or Proc object to the stack, you could
 also use a block. Either the observer argument or the block is required.</p>
+
+<p>Optionally, you could pass in an options hash as the last argument, that
+can specify an explicit priority. When omitted, an internal counter starting
+from 1 will be used. To make sure your observer is called last, specify
+a high, <strong>positive</strong> number. To make sure your observer is called first, specify
+a high, <strong>negative</strong> number.</p>
 
   </div>
 </div>
@@ -477,16 +502,42 @@ also use a block. Either the observer argument or the block is required.</p>
 <span class='dispatcher identifier id'>dispatcher</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'post.publish'</span><span class='comma token'>,</span> <span class='Reporter constant id'>Reporter</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='dot token'>.</span><span class='method identifier id'>method</span><span class='lparen token'>(</span><span class='symbol val'>:log</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
 </pre>
     
+      <h4><div class='inline'><p>Determining observer call order using priority</p></div></h4>
+      <pre class="example code"><span class='dispatcher identifier id'>dispatcher</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'pulp'</span><span class='comma token'>,</span> <span class='symbol val'>:priority</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>10</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
+  <span class='puts identifier id'>puts</span> <span class='string val'>&quot;I dare you!&quot;</span>
+<span class='end end kw'>end</span>
+<span class='dispatcher identifier id'>dispatcher</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'pulp'</span><span class='comma token'>,</span> <span class='symbol val'>:priority</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='integer val'>-10</span><span class='rparen token'>)</span> <span class='do do kw'>do</span>
+  <span class='puts identifier id'>puts</span> <span class='string val'>&quot;I double-dare you!&quot;</span>
+<span class='end end kw'>end</span>
+<span class='comment val'># output when &quot;pulp&quot; is triggered:</span>
+<span class='string val'>&quot;I double-dare you!&quot;</span>
+<span class='string val'>&quot;I dare you!&quot;</span>
+</pre>
+    
   </div>
-<h3>Parameters:</h3>
+
+  <h3>Overloads:</h3>
+  <ul class="overload">
+    
+      
+      <li class="overload_item">
+        <span class="signature">- (<tt>Object</tt>) <strong>connect</strong>(signal, observer, options = {}) </span>
+        <div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
 <ul class="param">
   
     <li>
       
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
         <span class='name'>signal</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
@@ -498,13 +549,11 @@ observers</p></div>
   
     <li>
       
-        <span class='type'>(<tt>#call</tt>)</span>
-      
-      
         <span class='name'>observer</span>
       
       
-        <em class="default">(defaults to: <tt>nil</tt>)</em>
+        <span class='type'>(<tt>#call</tt>)</span>
+      
       
       
         &mdash;
@@ -513,14 +562,128 @@ an event issued by an observable.</p></div>
       
     </li>
   
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>is an optional Hash of additional options.</p></div>
+      
+    </li>
+  
 </ul>
+
+  
+    
+    
+    
+    
+    
+    
+    <h3>Options Hash (<tt>options</tt>):</h3>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:priority</span>
+          <span class="type">(<tt>Fixnum</tt>)</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'><p>is the priority of this observer
+in the stack of all observers for this signal. A higher number means
+lower priority. Negative numbers are allowed.</p></div>
+        </tr>
+      
+    </ul>
+  
+
+</div>
+      </li>
+    
+      
+      <li class="overload_item">
+        <span class="signature">- (<tt>Object</tt>) <strong>connect</strong>(signal, options = {}, &amp;block) </span>
+        <div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>signal</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>is the name used by the observable to trigger
+observers</p></div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>is an optional Hash of additional options.</p></div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    <h3>Options Hash (<tt>options</tt>):</h3>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:priority</span>
+          <span class="type">(<tt>Fixnum</tt>)</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'><p>is the priority of this observer
+in the stack of all observers for this signal. A higher number means
+lower priority. Negative numbers are allowed.</p></div>
+        </tr>
+      
+    </ul>
+  
+    
+    
+
+</div>
+      </li>
+    
+  </ul>
 <h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt>#call</tt>)</span>
       
+        <span class='type'>(<tt>#call</tt>)</span>
       
       
       
@@ -537,31 +700,83 @@ an event issued by an observable.</p></div>
       <pre class="lines">
 
 
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108</pre>
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 98</span>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 127</span>
 
-<span class='def def kw'>def</span> <span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='signal identifier id'>signal</span><span class='comma token'>,</span> <span class='observer identifier id'>observer</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
-  <span class='if if kw'>if</span> <span class='observer identifier id'>observer</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
-    <span class='if if kw'>if</span> <span class='block_given? fid id'>block_given?</span>
-      <span class='observer identifier id'>observer</span> <span class='assign token'>=</span> <span class='block identifier id'>block</span>
+<span class='def def kw'>def</span> <span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='signal identifier id'>signal</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='comma token'>,</span> <span class='bitand op'>&amp;</span><span class='block identifier id'>block</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='block_given? fid id'>block_given?</span>
+    <span class='observer identifier id'>observer</span> <span class='assign token'>=</span> <span class='block identifier id'>block</span>
+    <span class='if if kw'>if</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='eq op'>==</span> <span class='integer val'>1</span> <span class='andop op'>&amp;&amp;</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='Hash constant id'>Hash</span><span class='rparen token'>)</span>
+      <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='first identifier id'>first</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
+      <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
     <span class='else else kw'>else</span>
-      <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'Use a block, method or proc to specify an observer'</span>
+      <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'When given a block, #connect only expects a signal and options hash as arguments'</span>
+    <span class='end end kw'>end</span>
+  <span class='else else kw'>else</span>
+    <span class='observer identifier id'>observer</span> <span class='assign token'>=</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+    <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'Use a block, method or proc to specify an observer'</span> <span class='unless unless_mod kw'>unless</span> <span class='observer identifier id'>observer</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='symbol val'>:call</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='any? fid id'>any?</span>
+      <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+      <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'#connect only expects a signal, method and options hash as arguments'</span> <span class='unless unless_mod kw'>unless</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span><span class='lparen token'>(</span><span class='Hash constant id'>Hash</span><span class='rparen token'>)</span> <span class='orop op'>||</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='any? fid id'>any?</span>
+    <span class='else else kw'>else</span>
+      <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
     <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
+
+  <span class='observer_with_priority identifier id'>observer_with_priority</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span>
+    <span class='symbol val'>:observer</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='observer identifier id'>observer</span><span class='comma token'>,</span>
+    <span class='symbol val'>:priority</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:priority</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='next_internal_priority identifier id'>next_internal_priority</span><span class='rparen token'>)</span>
+  <span class='rbrace token'>}</span>
+
+  <span class='comment val'># Initialize the list of observers for this signal and add this observer</span>
   <span class='observers identifier id'>observers</span><span class='lbrack token'>[</span><span class='signal identifier id'>signal</span><span class='rbrack token'>]</span> <span class='opasgn op'>||=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
-  <span class='observers identifier id'>observers</span><span class='lbrack token'>[</span><span class='signal identifier id'>signal</span><span class='rbrack token'>]</span> <span class='lshft op'>&lt;&lt;</span> <span class='observer identifier id'>observer</span>
+  <span class='observers identifier id'>observers</span><span class='lbrack token'>[</span><span class='signal identifier id'>signal</span><span class='rbrack token'>]</span> <span class='lshft op'>&lt;&lt;</span> <span class='observer_with_priority identifier id'>observer_with_priority</span>
+
+  <span class='comment val'># Sort all observers on priority</span>
+  <span class='observers identifier id'>observers</span><span class='lbrack token'>[</span><span class='signal identifier id'>signal</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='sort! fid id'>sort!</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='comma token'>,</span><span class='b identifier id'>b</span><span class='bitor op'>|</span>
+    <span class='a identifier id'>a</span><span class='lbrack token'>[</span><span class='symbol val'>:priority</span><span class='rbrack token'>]</span> <span class='cmp op'>&lt;=&gt;</span> <span class='b identifier id'>b</span><span class='lbrack token'>[</span><span class='symbol val'>:priority</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+
+  <span class='observer identifier id'>observer</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -588,10 +803,10 @@ an event issued by an observable.</p></div>
   
     <li>
       
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
         <span class='name'>signal</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
@@ -603,10 +818,10 @@ from.</p></div>
   
     <li>
       
-        <span class='type'>(<tt>#call</tt>)</span>
-      
-      
         <span class='name'>observer</span>
+      
+      
+        <span class='type'>(<tt>#call</tt>)</span>
       
       
       
@@ -621,8 +836,8 @@ from.</p></div>
   
     <li>
       
-        <span class='type'>(<tt>#call</tt>, <tt>nil</tt>)</span>
       
+        <span class='type'>(<tt>#call</tt>, <tt>nil</tt>)</span>
       
       
       
@@ -639,17 +854,21 @@ from.</p></div>
       <pre class="lines">
 
 
-116
-117
-118
-119</pre>
+171
+172
+173
+174
+175
+176</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 116</span>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 171</span>
 
 <span class='def def kw'>def</span> <span class='disconnect identifier id'>disconnect</span><span class='lparen token'>(</span><span class='signal identifier id'>signal</span><span class='comma token'>,</span> <span class='observer identifier id'>observer</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='observers identifier id'>observers</span><span class='dot token'>.</span><span class='key? fid id'>key?</span><span class='lparen token'>(</span><span class='signal identifier id'>signal</span><span class='rparen token'>)</span>
-  <span class='observers identifier id'>observers</span><span class='lbrack token'>[</span><span class='signal identifier id'>signal</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='observer identifier id'>observer</span><span class='rparen token'>)</span>
+  <span class='observers identifier id'>observers</span><span class='lbrack token'>[</span><span class='signal identifier id'>signal</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='delete_if identifier id'>delete_if</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='observer_with_priority identifier id'>observer_with_priority</span><span class='bitor op'>|</span>
+    <span class='observer_with_priority identifier id'>observer_with_priority</span><span class='lbrack token'>[</span><span class='symbol val'>:observer</span><span class='rbrack token'>]</span> <span class='eq op'>==</span> <span class='observer identifier id'>observer</span>
+  <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -680,10 +899,10 @@ before continuing to work on them (just an example).</p>
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
-      
-      
         <span class='name'></span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
       
       
       
@@ -691,10 +910,10 @@ before continuing to work on them (just an example).</p>
   
     <li>
       
-        <span class='type'>(<tt>Object</tt>)</span>
-      
-      
         <span class='name'>value</span>
+      
+      
+        <span class='type'>(<tt>Object</tt>)</span>
       
       
       
@@ -706,8 +925,8 @@ before continuing to work on them (just an example).</p>
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
       
       
       
@@ -721,16 +940,16 @@ before continuing to work on them (just an example).</p>
       <pre class="lines">
 
 
-161
-162
-163
-164
-165
-166
-167</pre>
+218
+219
+220
+221
+222
+223
+224</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 161</span>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 218</span>
 
 <span class='def def kw'>def</span> <span class='filter identifier id'>filter</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='comma token'>,</span> <span class='value identifier id'>value</span><span class='rparen token'>)</span>
   <span class='each identifier id'>each</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='dot token'>.</span><span class='signal identifier id'>signal</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='observer identifier id'>observer</span><span class='bitor op'>|</span>
@@ -769,10 +988,10 @@ program execution, such as logging important events.</p>
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
-      
-      
         <span class='name'></span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
       
       
       
@@ -784,8 +1003,8 @@ program execution, such as logging important events.</p>
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
       
       
       
@@ -799,15 +1018,15 @@ program execution, such as logging important events.</p>
       <pre class="lines">
 
 
-130
-131
-132
-133
-134
-135</pre>
+187
+188
+189
+190
+191
+192</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 130</span>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 187</span>
 
 <span class='def def kw'>def</span> <span class='notify identifier id'>notify</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='rparen token'>)</span>
   <span class='each identifier id'>each</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='dot token'>.</span><span class='signal identifier id'>signal</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='observer identifier id'>observer</span><span class='bitor op'>|</span>
@@ -843,10 +1062,10 @@ indicated it has handled the event by returning a non-falsy value.</p>
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
-      
-      
         <span class='name'></span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
       
       
       
@@ -858,8 +1077,8 @@ indicated it has handled the event by returning a non-falsy value.</p>
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="Event.html" title="Observatory::Event (class)">Event</a></span></tt>)</span>
       
       
       
@@ -880,15 +1099,15 @@ indicated it has handled the event by returning a non-falsy value.</p>
       <pre class="lines">
 
 
-145
-146
-147
-148
-149
-150</pre>
+202
+203
+204
+205
+206
+207</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 145</span>
+      <pre class="code"><span class="info file"># File 'lib/observatory/dispatcher.rb', line 202</span>
 
 <span class='def def kw'>def</span> <span class='notify_until identifier id'>notify_until</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='rparen token'>)</span>
   <span class='each identifier id'>each</span><span class='lparen token'>(</span><span class='event identifier id'>event</span><span class='dot token'>.</span><span class='signal identifier id'>signal</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='observer identifier id'>observer</span><span class='bitor op'>|</span>
@@ -907,9 +1126,9 @@ indicated it has handled the event by returning a non-falsy value.</p>
 </div>
     
     <div id="footer">
-  Generated on Sun May  1 21:33:36 2011 by 
+  Generated on Thu May 26 10:00:58 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.8 (ruby-1.8.7).
+  0.7.1 (ruby-1.8.7).
 </div>
 
   </body>
