@@ -16,7 +16,7 @@ class DispatcherTest < Test::Unit::TestCase
 
   def test_connecting_an_observer_using_a_method
     @dispatcher.connect('signal', @method)
-    assert @dispatcher.observers['signal'].include?(@method)
+    assert @dispatcher.observers['signal'].map { |o| o[:observer] }.include?(@method)
   end
 
   def test_connecting_an_observer_using_a_block
