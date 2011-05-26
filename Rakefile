@@ -12,7 +12,7 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
-YARD::Rake::YardocTask.new do |t| 
-  t.files   = ['lib/**/*.rb', 'app/**/*.rb', '-', 'LICENSE', 'HISTORY'] 
+YARD::Rake::YardocTask.new do |t|
+  t.files   = ['lib/**/*.rb', 'app/**/*.rb', '-', 'LICENSE', 'HISTORY']
   t.options = %w{--title Observatory -m markdown}
 end
