@@ -158,8 +158,6 @@ module Observatory
       # Initialize the list of observers for this signal and add this observer
       observers[signal] ||= Stack.new
       observers[signal].push(observer, options[:priority])
-
-      observer
     end
 
     # Removes an observer from a signal stack, so it no longer gets triggered.
@@ -230,3 +228,4 @@ module Observatory
     end
   end
 end
+
